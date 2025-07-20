@@ -21,13 +21,12 @@ def generate():
         image2.save(f2.name)
 
         output = replicate.run(
-            "lucataco/controlnet-kiss",
-            input={
-                "image": open(f1.name, "rb"),
-                "image2": open(f2.name, "rb"),
-                "prompt": "a realistic photo of two people kissing, detailed skin, cinematic lighting"
-            }
-        )
+    "lucataco/face-swap:84cd53b5588f89e5c579e6d35cc3b5dfd6c2a8f1d7a92480b6b5b40b19922712",
+    input={
+        "source_image": open(f1.name, "rb"),
+        "target_image": open(f2.name, "rb")
+    }
+)
     return jsonify({"result": output[0]})
 
 if __name__ == "__main__":
