@@ -21,7 +21,7 @@ def generate():
         image2.save(f2.name)
 
         output = replicate.run(
-    "lucataco/face-swap:84cd53b5588f89e5c579e6d35cc3b5dfd6c2a8f1d7a92480b6b5b40b19922712",
+    "lucataco/face-swap",
     input={
         "source_image": open(f1.name, "rb"),
         "target_image": open(f2.name, "rb")
