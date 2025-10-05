@@ -12,22 +12,25 @@ replicate.Client(api_token=os.environ["REPLICATE_API_TOKEN"])
 def generate():
     image1 = request.files.get("image1")
     image2 = request.files.get("image2")
+
     if not image1 or not image2:
-        return jsonify({"error": "Both images are required."}), 400
+        return jsonify({"error": "Both images are required"}), 400
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as f1, \
          tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as f2:
         image1.save(f1.name)
         image2.save(f2.name)
 
+        # ✅ Using the new working model
         output = replicate.run(
-    "lucataco/face-swap",
-    input={
-        "source_image": open(f1.name, "rb"),
-        "target_image": open(f2.name, "rb")
-    }
-)
-    return jsonify({"result": output[0]})
+            "codeplugtech/face-swap:278a81e7ebb22db98bcba54de985d22cc1abeead2754eb1f2af717247be69b34",
+            input={
+                "target_image": open(f1.name, "rb"),
+                "source_image": open(f2.name, "rb")
+            }
+        )
+
+    return jsonify({"result": output})
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
