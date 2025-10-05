@@ -26,7 +26,7 @@ def generate():
         try:
             # Run the faceswap model
             output = replicate.run(
-                "scamai/faceswap:5c35c60b7f8b2f99e6a1b2bbd4cfe3b0b178440d1f5e71d722e5274b7689e2a7",
+    "fofr/face-swap:8e37b3fda37dc9085cb02b84b5a76221f64f8dbb27d38a33a9a0c8b8b23a6e5b",
                 input={
                     "face_image": open(f1.name, "rb"),
                     "target_image": open(f2.name, "rb")
