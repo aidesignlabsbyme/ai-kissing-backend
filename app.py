@@ -8,8 +8,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# Initialize Replicate client with your API token
-replicate.Client(api_token=os.environ["REPLICATE_API_TOKEN"])
+# Initialize Replicate client properly
+client = replicate.Client(api_token=os.environ.get("REPLICATE_API_TOKEN"))
 
 @app.route("/generate", methods=["POST"])
 def generate():
@@ -21,14 +21,14 @@ def generate():
         if not image1 or not image2:
             return jsonify({"error": "Both images are required"}), 400
 
-        # Save the images temporarily
+        # Save both images temporarily
         with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as f1, \
              tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as f2:
             image1.save(f1.name)
             image2.save(f2.name)
 
-            # Run the Replicate model
-            output = replicate.run(
+            # Run Replicate model
+            output = client.run(
                 "codeplugtech/face-swap:278a81e7ebb22db98bcba54de985d22cc1abeead2754eb1f2af717247be69b34",
                 input={
                     "source_image": open(f1.name, "rb"),
@@ -36,7 +36,7 @@ def generate():
                 }
             )
 
-        # Return the model output
+        # Return result
         return jsonify({"result": output})
 
     except Exception as e:
