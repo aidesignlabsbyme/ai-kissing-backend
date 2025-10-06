@@ -40,6 +40,8 @@ def generate():
         return jsonify({"result": output})
 
     except Exception as e:
+        import traceback
+traceback.print_exc()
         print("🔥 Error in /generate:", str(e))
         return jsonify({"error": str(e)}), 500
 
