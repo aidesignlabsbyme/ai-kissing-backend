@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# Free Hugging Face API endpoint
+# Free Hugging Face Space endpoint
 HF_API_URL = "https://akhaliq-face-swap.hf.space/run/predict"
 
 
@@ -30,13 +30,12 @@ def generate():
             image1.save(f1.name)
             image2.save(f2.name)
 
-        # Send both images to Hugging Face Space
-        files = {
-            "data": [
-                ("data", open(f1.name, "rb")),
-                ("data", open(f2.name, "rb")),
-            ]
-        }
+        # ✅ Correct 'files' format for requests.post()
+        files = [
+            ("data", open(f1.name, "rb")),
+            ("data", open(f2.name, "rb")),
+        ]
+
         response = requests.post(HF_API_URL, files=files)
 
         print("🔍 HF status:", response.status_code)
