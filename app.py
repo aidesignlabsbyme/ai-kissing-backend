@@ -1,3 +1,21 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import requests
+import tempfile
+import os
+
+app = Flask(__name__)
+CORS(app)
+
+# Free Hugging Face API endpoint
+HF_API_URL = "https://akhaliq-face-swap.hf.space/run/predict"
+
+
+@app.route("/")
+def home():
+    return "AI Kissing Backend (free Hugging Face version) is running!"
+
+
 @app.route("/generate", methods=["POST"])
 def generate():
     try:
@@ -24,7 +42,6 @@ def generate():
         print("🔍 HF status:", response.status_code)
         print("🔍 HF raw response:", response.text)
 
-        result = {}
         try:
             result = response.json()
         except Exception:
@@ -34,7 +51,6 @@ def generate():
         os.remove(f1.name)
         os.remove(f2.name)
 
-        # Parse output
         if "data" in result and len(result["data"]) > 0:
             return jsonify({"result": result["data"][0]})
         else:
@@ -45,3 +61,8 @@ def generate():
         traceback.print_exc()
         print("🔥 Error in /generate:", str(e))
         return jsonify({"error": str(e)}), 500
+
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
